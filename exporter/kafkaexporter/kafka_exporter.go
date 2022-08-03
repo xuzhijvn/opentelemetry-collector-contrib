@@ -18,6 +18,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log"
 
 	"github.com/Shopify/sarama"
 	"go.opentelemetry.io/collector/component"
@@ -48,6 +49,10 @@ func (ke kafkaErrors) Error() string {
 }
 
 func (e *kafkaTracesProducer) tracesPusher(_ context.Context, td ptrace.Traces) error {
+	log.Println("华泰kafkaexporter...")
+	for i := 0; i < td.ResourceSpans().Len(); i++ {
+		log.Println("华泰Attributes: ", td.ResourceSpans().At(i).Resource().Attributes())
+	}
 	messages, err := e.marshaler.Marshal(td, e.topic)
 	if err != nil {
 		return consumererror.NewPermanent(err)
